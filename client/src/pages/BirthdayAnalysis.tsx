@@ -546,9 +546,8 @@ export default function BirthdayAnalysis() {
                     const numStr = (result.combined as any)[pos.key] as string;
                     const reading = lookupCombinedNumber(numStr);
                     const icon = combinedIcons[pos.key];
-                    const healthWarn = getCombinedHealthWarning(numStr);
                     return (
-                      <Card key={pos.key} className={`border-none shadow-sm ${healthWarn?.severity === "high" ? "ring-1 ring-destructive/30" : ""}`}>
+                      <Card key={pos.key} className={`border-none shadow-sm ${reading?.health ? "ring-1 ring-destructive/30" : ""}`}>
                         <CardContent className="p-4">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-muted-foreground">{icon}</span>
@@ -563,19 +562,18 @@ export default function BirthdayAnalysis() {
                               </summary>
                               <div className="bg-muted/50 rounded-lg p-3 mt-2">
                                 <p className="text-sm text-muted-foreground whitespace-pre-line">{reading.content}</p>
+                                {reading.health && (
+                                  <div className="mt-2 px-3 py-2 rounded-lg bg-destructive/10 text-destructive text-xs flex items-start gap-1.5">
+                                    <Activity className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                                    <span className="whitespace-pre-line">{reading.health}</span>
+                                  </div>
+                                )}
                               </div>
                             </details>
                           ) : (
                             <p className="text-xs text-muted-foreground italic">此聯合數字暫無詳細解讀</p>
                           )}
-                          {healthWarn && (
-                            <div className={`mt-2 px-3 py-2 rounded-lg text-xs flex items-start gap-1.5 ${
-                              healthWarn.severity === "high" ? "bg-destructive/10 text-destructive" : "bg-orange-50 text-orange-700"
-                            }`}>
-                              <Activity className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-                              <span>{healthWarn.warning}</span>
-                            </div>
-                          )}
+
                         </CardContent>
                       </Card>
                     );

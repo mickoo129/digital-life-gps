@@ -12,7 +12,7 @@ import { WUXING_COLOR } from "@/lib/calculator";
 
 type LookupResult =
   | { type: "single"; number: number }
-  | { type: "combined"; key: string; content: string }
+  | { type: "combined"; key: string; content: string; health?: string }
   | { type: "notfound"; input: string };
 
 export default function NumberLookup() {
@@ -33,7 +33,7 @@ export default function NumberLookup() {
     if (/^\d{3}$/.test(trimmed)) {
       const reading = lookupCombinedNumber(trimmed);
       if (reading) {
-        setResult({ type: "combined", key: trimmed, content: reading.content });
+        setResult({ type: "combined", key: trimmed, content: reading.content, health: reading.health });
       } else {
         setResult({ type: "notfound", input: trimmed });
       }
@@ -226,6 +226,12 @@ export default function NumberLookup() {
               <CardContent>
                 <div className="bg-muted/50 rounded-lg p-4">
                   <p className="text-sm text-muted-foreground whitespace-pre-line">{result.content}</p>
+                  {result.health && (
+                    <div className="mt-3 px-3 py-2 rounded-lg bg-destructive/10 text-destructive text-xs flex items-start gap-1.5">
+                      <span className="shrink-0">⚕️</span>
+                      <span className="whitespace-pre-line">{result.health}</span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
