@@ -163,18 +163,27 @@ function analyzeHealth(
 ): { warnings: { category: string; severity: "high" | "medium" | "low"; message: string }[] } {
   const warnings: { category: string; severity: "high" | "medium" | "low"; message: string }[] = [];
 
-  // 1. 官鬼疾病位出現金 → 看主性格數字五行對應的疾病
-  if (wuxing.wuxingRelations.ghost === "金") {
-    const selfWx = wuxing.selfWuxing;
-    const detail = WUXING_HEALTH_DETAIL[selfWx];
+  // === 規則1：官鬼疾病位出現「金」或「0」→ 對應主性格數字的五行疾病 ===
+  const ghostWuxing = wuxing.wuxingRelations.ghost;
+  const selfWx = wuxing.selfWuxing;
+  const selfDetail = WUXING_HEALTH_DETAIL[selfWx];
+  if (ghostWuxing === "金") {
     warnings.push({
       category: "官鬼疾病位",
       severity: "high",
-      message: `官鬼疾病位為「金」（刀的磁場），有把刀對住健康位。主性格五行為「${selfWx}」，需特別注意${detail.organs.join("、")}方面的問題。${detail.description}`
+      message: `官鬼疾病位為「金」（刀的磁場），有把刀對住健康位。主性格五行為「${selfWx}」，需特別注意${selfDetail.organs.join("、")}方面的問題。${selfDetail.description}`
+    });
+  }
+  if (wuxing.ghostCount === 0) {
+    warnings.push({
+      category: "官鬼疾病位",
+      severity: "high",
+      message: `官鬼疾病位（${ghostWuxing}）數值為0，突發性身體問題風險高。主性格五行為「${selfWx}」，需特別注意${selfDetail.organs.join("、")}方面的問題。${selfDetail.description}`
     });
   }
 
-  // 2. 自身 - 事業/伴侶 = 0 或 = 3
+  // === 規則3：差值雙向判斷 ===
+  // 自身 vs 事業/伴侶：|自身 - 事業| = 0 或 = 3
   const careerDiff = Math.abs(wuxing.selfCount - wuxing.careerCount);
   if (careerDiff === 0 || careerDiff === 3) {
     const careerWx = wuxing.wuxingRelations.career;
@@ -182,11 +191,11 @@ function analyzeHealth(
     warnings.push({
       category: "五行差值",
       severity: careerDiff === 0 ? "high" : "medium",
-      message: `「自身」減「事業/伴侶」= ${careerDiff}，${careerDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。事業/伴侶五行為「${careerWx}」，注意${detail.organs.join("、")}。`
+      message: `「自身（${wuxing.selfCount}）」與「事業/伴侶（${wuxing.careerCount}）」差值 = ${careerDiff}，${careerDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。事業/伴侶五行為「${careerWx}」，注意${detail.organs.join("、")}。`
     });
   }
 
-  // 3. 自身 - 官鬼/疾病 = 0 或 = 3
+  // 自身 vs 官鬼/疾病：|自身 - 官鬼| = 0 或 = 3
   const ghostDiff = Math.abs(wuxing.selfCount - wuxing.ghostCount);
   if (ghostDiff === 0 || ghostDiff === 3) {
     const ghostWx = wuxing.wuxingRelations.ghost;
@@ -194,22 +203,35 @@ function analyzeHealth(
     warnings.push({
       category: "五行差值",
       severity: ghostDiff === 0 ? "high" : "medium",
-      message: `「自身」減「官鬼/疾病」= ${ghostDiff}，${ghostDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。官鬼/疾病五行為「${ghostWx}」，注意${detail.organs.join("、")}。`
+      message: `「自身（${wuxing.selfCount}）」與「官鬼/疾病（${wuxing.ghostCount}）」差值 = ${ghostDiff}，${ghostDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。官鬼/疾病五行為「${ghostWx}」，注意${detail.organs.join("、")}。`
     });
   }
 
-  // 4. 反向：事業/伴侶 減 自身 = 0 或 = 3（掉翻轉）
-  // 已在上面careerDiff處理（Math.abs）
+  // === 規則4：土金特殊組合 ===
+  const earthCount = wuxing.counts["土"];
+  const metalCount = wuxing.counts["金"];
+  // 土=0 且 金≥5 → 容易糖尿病
+  if (earthCount === 0 && metalCount >= 5) {
+    warnings.push({
+      category: "五行特殊組合",
+      severity: "high",
+      message: `土=0 且 金=${metalCount}（≥5），容易有糖尿病風險。建議定期檢查血糖。`
+    });
+  }
+  // 土≤2 且 金≥5 → 甲狀腺及免疫系統問題
+  if (earthCount <= 2 && metalCount >= 5) {
+    warnings.push({
+      category: "五行特殊組合",
+      severity: "high",
+      message: `土=${earthCount}（≤2）且 金=${metalCount}（≥5），需注意甲狀腺及免疫系統問題。`
+    });
+  }
 
-  // 5. 反向：官鬼/疾病 減 自身 = 0 或 = 3
-  // 已在上面ghostDiff處理（Math.abs）
-
-  // 6. 五行表任何位置 = 0 → 提醒該位五行健康風險
+  // === 五行表任何位置 = 0 → 提醒該位五行健康風險 ===
   const positions = [
     { label: "自身", value: wuxing.selfCount, wx: wuxing.wuxingRelations.self },
     { label: "子女/錢財", value: wuxing.childCount, wx: wuxing.wuxingRelations.child },
     { label: "事業/伴侶", value: wuxing.careerCount, wx: wuxing.wuxingRelations.career },
-    { label: "官鬼/疾病", value: wuxing.ghostCount, wx: wuxing.wuxingRelations.ghost },
     { label: "父母/貴人", value: wuxing.parentCount, wx: wuxing.wuxingRelations.parent },
   ];
   for (const pos of positions) {
@@ -217,13 +239,13 @@ function analyzeHealth(
       const detail = WUXING_HEALTH_DETAIL[pos.wx];
       warnings.push({
         category: "五行缺位",
-        severity: pos.label === "官鬼/疾病" ? "high" : "medium",
-        message: `「${pos.label}」位（${pos.wx}）數值為0，${pos.label === "官鬼/疾病" ? "突發性身體問題風險高" : "能量不足"}。需注意${detail.organs.join("、")}。`
+        severity: "medium",
+        message: `「${pos.label}」位（${pos.wx}）數值為0，能量不足。需注意${detail.organs.join("、")}。`
       });
     }
   }
 
-  // 7. 水火沖健康影響
+  // === 水火沖健康影響 ===
   if (waterFireClash > 0) {
     warnings.push({
       category: "水火沖",
@@ -232,7 +254,7 @@ function analyzeHealth(
     });
   }
 
-  // 8. 聯合數字健康提示
+  // === 規則2 + 聯合數字健康提示 ===
   const combinedEntries = [
     { key: "fatherGene", label: "第1組 父基因", num: combined.fatherGene },
     { key: "motherGene", label: "第2組 母基因", num: combined.motherGene },
@@ -252,13 +274,16 @@ function analyzeHealth(
   for (const entry of combinedEntries) {
     const hw = getCombinedHealthWarning(entry.num);
     if (hw) {
-      // 第6/9/12組出現393/933特殊提示
       const posIdx = parseInt(entry.label.match(/第(\d+)組/)?.[1] || "0");
       let extraNote = "";
-      if ((entry.num === "393" || entry.num === "933") && [6, 9, 12].includes(posIdx)) {
-        extraNote = "（七魄外面出現，惡性腫瘤高發風險）";
+      // 規則2：393腫瘤高發號位置判斷
+      if (entry.num === "393" || entry.num === "933") {
         if (posIdx === 6) {
-          extraNote += "（女性需特別注意惡性子宮肌瘤）";
+          extraNote = "（子女下屬位出現，40多歲突發性惡性子宮肌瘤風險）";
+        } else if (posIdx === 9) {
+          extraNote = "（當下朋友位出現，需留意腫瘤高發風險）";
+        } else if (posIdx === 12) {
+          extraNote = "（財健子位出現，需留意腫瘤高發風險）";
         }
       }
       warnings.push({

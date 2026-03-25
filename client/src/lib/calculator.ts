@@ -237,27 +237,36 @@ export function calculateWuxing(mainNumber: number, all16: number[]): WuxingAnal
   const ghostCount = counts[relations.ghost];
   const parentCount = counts[relations.parent];
   
-  // 健康警示：自身與事業/伴侶或自身與官鬼/疾病差距=3或=0
+  // 健康警示
   const healthWarnings: string[] = [];
   
   const ghostWuxing = relations.ghost;
   const selfWuxingHealth = WUXING_HEALTH[selfWuxing];
   
-  // 條件1：|自身 - 事業/伴侶| = 3 或 = 0
-  const careerDiff = Math.abs(selfCount - careerCount);
-  if (careerDiff === 3 || careerDiff === 0) {
-    healthWarnings.push(`事業/伴侶位（${relations.career}）失衡，需注意${WUXING_HEALTH[relations.career].join("、")}問題`);
-  }
-  
-  // 條件2：|自身 - 官鬼/疾病| = 3 或 = 0
-  const ghostDiff = Math.abs(selfCount - ghostCount);
-  if (ghostDiff === 3 || ghostDiff === 0) {
-    healthWarnings.push(`官鬼/疾病位（${ghostWuxing}）失衡，需注意${WUXING_HEALTH[ghostWuxing].join("、")}問題`);
-  }
-  
-  // 條件3：官鬼/疾病 = 金 → 注意主性格所屬健康問題
+  // 規則1：官鬼疾病位出現金或0
   if (ghostWuxing === "金") {
-    healthWarnings.push(`官鬼/疾病位為金，需特別注意${selfWuxingHealth.join("、")}問題`);
+    healthWarnings.push(`官鬼/疾病位為金（刀的磁場），需特別注意${selfWuxingHealth.join("、")}問題`);
+  }
+  if (ghostCount === 0) {
+    healthWarnings.push(`官鬼/疾病位數值為0，突發性身體問題風險高，需注意${selfWuxingHealth.join("、")}問題`);
+  }
+  
+  // 規則3：差值雙向判斷
+  const careerDiff = Math.abs(selfCount - careerCount);
+  if (careerDiff === 0 || careerDiff === 3) {
+    healthWarnings.push(`自身與事業/伴侶差值=${careerDiff}，需注意${WUXING_HEALTH[relations.career].join("、")}問題`);
+  }
+  const ghostDiff = Math.abs(selfCount - ghostCount);
+  if (ghostDiff === 0 || ghostDiff === 3) {
+    healthWarnings.push(`自身與官鬼/疾病差值=${ghostDiff}，需注意${WUXING_HEALTH[ghostWuxing].join("、")}問題`);
+  }
+  
+  // 規則4：土金特殊組合
+  if (counts["土"] === 0 && counts["金"] >= 5) {
+    healthWarnings.push(`土=0且金≥5，容易有糖尿病風險`);
+  }
+  if (counts["土"] <= 2 && counts["金"] >= 5) {
+    healthWarnings.push(`土≤2且金≥5，需注意甲狀腺及免疫系統問題`);
   }
   
   return {
