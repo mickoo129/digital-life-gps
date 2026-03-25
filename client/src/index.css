@@ -40,45 +40,48 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: 'LXGW WenKai TC', cursive;
-  --font-sans: 'Noto Sans TC', sans-serif;
-  --font-mono: 'Space Grotesk', monospace;
+  /* iOS system fonts */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", "PingFang TC", "PingFang SC", sans-serif;
+  --font-mono: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
 }
 
 :root {
-  --primary: oklch(0.55 0.12 55);
-  --primary-foreground: oklch(0.98 0.005 55);
-  --sidebar-primary: oklch(0.55 0.12 55);
-  --sidebar-primary-foreground: oklch(0.98 0.005 55);
-  --chart-1: oklch(0.78 0.12 85);
-  --chart-2: oklch(0.55 0.15 250);
-  --chart-3: oklch(0.65 0.18 45);
-  --chart-4: oklch(0.6 0.15 155);
-  --chart-5: oklch(0.6 0.1 55);
+  /* Water element blue palette - light & clean */
+  --primary: oklch(0.55 0.14 240);
+  --primary-foreground: oklch(0.98 0.005 240);
+  --sidebar-primary: oklch(0.55 0.14 240);
+  --sidebar-primary-foreground: oklch(0.98 0.005 240);
+  --chart-1: oklch(0.65 0.12 240);
+  --chart-2: oklch(0.55 0.15 200);
+  --chart-3: oklch(0.65 0.10 260);
+  --chart-4: oklch(0.6 0.12 220);
+  --chart-5: oklch(0.7 0.08 240);
   --radius: 0.75rem;
-  --background: oklch(0.97 0.008 75);
-  --foreground: oklch(0.25 0.02 55);
-  --card: oklch(0.99 0.004 75);
-  --card-foreground: oklch(0.25 0.02 55);
-  --popover: oklch(0.99 0.004 75);
-  --popover-foreground: oklch(0.25 0.02 55);
-  --secondary: oklch(0.94 0.012 75);
-  --secondary-foreground: oklch(0.35 0.02 55);
-  --muted: oklch(0.93 0.01 75);
-  --muted-foreground: oklch(0.5 0.02 55);
-  --accent: oklch(0.93 0.015 75);
-  --accent-foreground: oklch(0.25 0.02 55);
+  /* Light blue-tinted background */
+  --background: oklch(0.975 0.006 240);
+  --foreground: oklch(0.22 0.02 240);
+  --card: oklch(0.995 0.003 240);
+  --card-foreground: oklch(0.22 0.02 240);
+  --popover: oklch(0.995 0.003 240);
+  --popover-foreground: oklch(0.22 0.02 240);
+  --secondary: oklch(0.94 0.01 240);
+  --secondary-foreground: oklch(0.32 0.02 240);
+  --muted: oklch(0.935 0.008 240);
+  --muted-foreground: oklch(0.48 0.02 240);
+  --accent: oklch(0.93 0.012 240);
+  --accent-foreground: oklch(0.22 0.02 240);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.88 0.015 75);
-  --input: oklch(0.88 0.015 75);
-  --ring: oklch(0.55 0.12 55);
-  --sidebar: oklch(0.96 0.01 75);
-  --sidebar-foreground: oklch(0.25 0.02 55);
-  --sidebar-accent: oklch(0.93 0.015 75);
-  --sidebar-accent-foreground: oklch(0.25 0.02 55);
-  --sidebar-border: oklch(0.88 0.015 75);
-  --sidebar-ring: oklch(0.55 0.12 55);
+  --border: oklch(0.89 0.012 240);
+  --input: oklch(0.89 0.012 240);
+  --ring: oklch(0.55 0.14 240);
+  --sidebar: oklch(0.965 0.008 240);
+  --sidebar-foreground: oklch(0.22 0.02 240);
+  --sidebar-accent: oklch(0.93 0.012 240);
+  --sidebar-accent-foreground: oklch(0.22 0.02 240);
+  --sidebar-border: oklch(0.89 0.012 240);
+  --sidebar-ring: oklch(0.55 0.14 240);
 }
 
 @layer base {
@@ -87,7 +90,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", "PingFang TC", "PingFang SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -132,11 +137,8 @@
   }
 
   .font-display {
-    font-family: 'LXGW WenKai TC', cursive;
-  }
-
-  .font-mono-num {
-    font-family: 'Space Grotesk', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    font-weight: 600;
   }
 
   /* Five Element Colors */

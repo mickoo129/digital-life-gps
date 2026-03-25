@@ -76,7 +76,7 @@ export default function NumberLookup() {
                 <div className="flex items-end">
                   <Button
                     onClick={handleLookup}
-                    className="bg-[#C9A96E] hover:bg-[#B8944D] text-white w-full sm:w-auto"
+                    className="bg-[#3B82C8] hover:bg-[#2D6BA3] text-white w-full sm:w-auto"
                   >
                     <Search className="w-4 h-4 mr-2" />
                     查詢
@@ -161,7 +161,7 @@ export default function NumberLookup() {
                       <h4 className="font-medium text-sm mb-2">天賦人格</h4>
                       <div className="flex flex-wrap gap-2">
                         {profile.giftPersonality.map((g, i) => (
-                          <span key={i} className="px-2.5 py-1 rounded-full bg-[#C9A96E]/10 text-[#C9A96E] text-xs font-medium">{g}</span>
+                          <span key={i} className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">{g}</span>
                         ))}
                       </div>
                     </div>
@@ -204,7 +204,7 @@ export default function NumberLookup() {
                     <ul className="space-y-2">
                       {profile.salesStrategy.steps.map((s, i) => (
                         <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                          <span className="font-mono text-[#C9A96E] font-bold mt-0.5">{i + 1}.</span>
+                          <span className="font-mono text-[#3B82C8] font-bold mt-0.5">{i + 1}.</span>
                           {s}
                         </li>
                       ))}
@@ -219,7 +219,7 @@ export default function NumberLookup() {
             <Card className="border-none shadow-sm">
               <CardHeader>
                 <CardTitle className="font-display flex items-center gap-3">
-                  <span className="font-mono text-2xl text-[#C9A96E]">{result.key}</span>
+                  <span className="font-mono text-2xl text-[#3B82C8]">{result.key}</span>
                   <span>聯合數字解讀</span>
                 </CardTitle>
               </CardHeader>
@@ -252,7 +252,7 @@ export default function NumberLookup() {
                     <button
                       key={n}
                       onClick={() => { setInput(String(n)); setResult({ type: "single", number: n }); }}
-                      className="p-4 rounded-xl border border-border hover:border-[#C9A96E]/50 hover:shadow-md transition-all text-left"
+                      className="p-4 rounded-xl border border-border hover:border-[#3B82C8]/50 hover:shadow-md transition-all text-left"
                     >
                       <span
                         className="inline-flex items-center justify-center w-8 h-8 rounded-lg font-mono text-sm font-bold text-white mb-2"

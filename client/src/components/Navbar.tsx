@@ -14,7 +14,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
       <div className="container flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2 no-underline">
-          <Compass className="w-6 h-6 text-[#C9A96E]" />
+          <Compass className="w-6 h-6 text-[#3B82C8]" />
           <span className="font-display text-lg font-bold text-foreground">
             數字人生GPS
           </span>

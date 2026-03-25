@@ -17,20 +17,20 @@ export default function Home() {
         }} />
         <div className="container relative">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C9A96E]/10 text-[#C9A96E] text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#3B82C8]/10 text-[#3B82C8] text-sm font-medium mb-6">
               <Compass className="w-4 h-4" />
               數字人生GPS
             </div>
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-foreground leading-tight mb-4">
               解讀你的
-              <span className="text-[#C9A96E]">生命密碼</span>
+              <span className="text-[#3B82C8]">生命密碼</span>
             </h1>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8">
               透過出生日期的數字組合，探索你的性格特質、五行分析、聯合數字解讀、流年運程及成交攻略。
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/analysis">
-                <Button size="lg" className="gap-2 bg-[#C9A96E] hover:bg-[#B8944D] text-white w-full sm:w-auto">
+                <Button size="lg" className="gap-2 bg-[#3B82C8] hover:bg-[#2D6BA3] text-white w-full sm:w-auto">
                   <Calendar className="w-5 h-5" />
                   輸入出生日期
                 </Button>
@@ -52,8 +52,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <Card className="border-none shadow-sm hover:shadow-md transition-shadow bg-card">
               <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 rounded-xl bg-[#C9A96E]/10 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-6 h-6 text-[#C9A96E]" />
+                <div className="w-12 h-12 rounded-xl bg-[#3B82C8]/10 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-6 h-6 text-[#3B82C8]" />
                 </div>
                 <h3 className="font-display text-lg font-bold mb-2">倒正三角計算</h3>
                 <p className="text-sm text-muted-foreground">
