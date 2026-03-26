@@ -167,18 +167,22 @@ function analyzeHealth(
   const ghostWuxing = wuxing.wuxingRelations.ghost;
   const selfWx = wuxing.selfWuxing;
   const selfDetail = WUXING_HEALTH_DETAIL[selfWx];
+  // 記錄官鬼位是否已被規則1處理，避免五行缺位規則重複顯示
+  let ghostHandledByRule1 = false;
   if (ghostWuxing === "金") {
+    ghostHandledByRule1 = true;
     warnings.push({
       category: "官鬼疾病位",
       severity: "high",
-      message: `官鬼疾病位為「金」（刀的磁場），有把刀對住健康位。主性格五行為「${selfWx}」，需特別注意${selfDetail.organs.join("、")}方面的問題。${selfDetail.description}`
+      message: `官鬼疾病位為「金」（刀的磁場），有把刀對住健康位。主性格五行為「${selfWx}」，${selfDetail.description}`
     });
   }
   if (wuxing.ghostCount === 0) {
+    ghostHandledByRule1 = true;
     warnings.push({
       category: "官鬼疾病位",
       severity: "high",
-      message: `官鬼疾病位（${ghostWuxing}）數值為0，突發性身體問題風險高。主性格五行為「${selfWx}」，需特別注意${selfDetail.organs.join("、")}方面的問題。${selfDetail.description}`
+      message: `官鬼疾病位（${ghostWuxing}）數值為0，突發性身體問題風險高。主性格五行為「${selfWx}」，${selfDetail.description}`
     });
   }
 
@@ -229,12 +233,15 @@ function analyzeHealth(
 
   // === 五行表任何位置 = 0 → 提醒該位五行健康風險 ===
   const positions = [
-    { label: "自身", value: wuxing.selfCount, wx: wuxing.wuxingRelations.self },
-    { label: "子女/錢財", value: wuxing.childCount, wx: wuxing.wuxingRelations.child },
-    { label: "事業/伴侶", value: wuxing.careerCount, wx: wuxing.wuxingRelations.career },
-    { label: "父母/貴人", value: wuxing.parentCount, wx: wuxing.wuxingRelations.parent },
+    { label: "自身", value: wuxing.selfCount, wx: wuxing.wuxingRelations.self, isGhost: false },
+    { label: "子女/錢財", value: wuxing.childCount, wx: wuxing.wuxingRelations.child, isGhost: false },
+    { label: "事業/伴侶", value: wuxing.careerCount, wx: wuxing.wuxingRelations.career, isGhost: false },
+    { label: "父母/貴人", value: wuxing.parentCount, wx: wuxing.wuxingRelations.parent, isGhost: false },
+    { label: "官鬼/疾病", value: wuxing.ghostCount, wx: wuxing.wuxingRelations.ghost, isGhost: true },
   ];
   for (const pos of positions) {
+    // 官鬼位已被規則1處理過，跳過避免重複
+    if (pos.isGhost && ghostHandledByRule1) continue;
     if (pos.value === 0) {
       const detail = WUXING_HEALTH_DETAIL[pos.wx];
       warnings.push({
@@ -273,23 +280,28 @@ function analyzeHealth(
 
   for (const entry of combinedEntries) {
     const hw = getCombinedHealthWarning(entry.num);
-    if (hw) {
+    // 同時查找data-combined.ts中的完整health欄位
+    const fullReading = lookupCombinedNumber(entry.num);
+    const fullHealth = fullReading?.health?.trim();
+    if (hw || fullHealth) {
       const posIdx = parseInt(entry.label.match(/第(\d+)組/)?.[1] || "0");
       let extraNote = "";
       // 規則2：393腫瘤高發號位置判斷
       if (entry.num === "393" || entry.num === "933") {
         if (posIdx === 6) {
-          extraNote = "（子女下屬位出現，40多歲突發性惡性子宮肌瘤風險）";
+          extraNote = "\n（子女下屬位出現，40多歲突發性惡性子宮肌瘤風險）";
         } else if (posIdx === 9) {
-          extraNote = "（當下朋友位出現，需留意腫瘤高發風險）";
+          extraNote = "\n（當下朋友位出現，需留意腫瘤高發風險）";
         } else if (posIdx === 12) {
-          extraNote = "（財健子位出現，需留意腫瘤高發風險）";
+          extraNote = "\n（財健子位出現，需留意腫瘤高發風險）";
         }
       }
+      // 優先使用data-combined.ts的完整health欄位，若無則用getCombinedHealthWarning的摘要
+      const healthText = fullHealth || hw?.warning || "";
       warnings.push({
         category: "聯合數字",
-        severity: hw.severity,
-        message: `${entry.label}（${entry.num}）：${hw.warning}${extraNote}`
+        severity: hw?.severity || "medium",
+        message: `${entry.label}（${entry.num}）：${healthText}${extraNote}`
       });
     }
   }
