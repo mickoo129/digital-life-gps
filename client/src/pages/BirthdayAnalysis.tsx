@@ -194,7 +194,7 @@ function analyzeHealth(
     const detail = WUXING_HEALTH_DETAIL[careerWx];
     warnings.push({
       category: "五行差值",
-      severity: careerDiff === 0 ? "high" : "medium",
+      severity: "high",
       message: `「自身（${wuxing.selfCount}）」與「事業/伴侶（${wuxing.careerCount}）」差值 = ${careerDiff}，${careerDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。事業/伴侶五行為「${careerWx}」，注意${detail.organs.join("、")}。`
     });
   }
@@ -206,7 +206,7 @@ function analyzeHealth(
     const detail = WUXING_HEALTH_DETAIL[ghostWx];
     warnings.push({
       category: "五行差值",
-      severity: ghostDiff === 0 ? "high" : "medium",
+      severity: "high",
       message: `「自身（${wuxing.selfCount}）」與「官鬼/疾病（${wuxing.ghostCount}）」差值 = ${ghostDiff}，${ghostDiff === 0 ? "突發性身體問題風險" : "需注意健康"}。官鬼/疾病五行為「${ghostWx}」，注意${detail.organs.join("、")}。`
     });
   }
@@ -246,7 +246,7 @@ function analyzeHealth(
       const detail = WUXING_HEALTH_DETAIL[pos.wx];
       warnings.push({
         category: "五行缺位",
-        severity: "medium",
+        severity: "high",
         message: `「${pos.label}」位（${pos.wx}）數值為0，能量不足。需注意${detail.organs.join("、")}。`
       });
     }
