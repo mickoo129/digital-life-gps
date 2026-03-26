@@ -440,7 +440,7 @@ export const combinedNumbersData: Record<string, CombinedNumberData> = {
 理財高手：會貨比三家，精打細算（摳門）
 顧家、忠誠、專一：靠譜
 適合做跟會計、金融、財務策劃相關的工作
-核心需求：安全感 ← 物質上的穩定、情感上的踏實
+核心需求：安全感 → 物質上的穩定、情感上的踏實
 不管是事業、愛情還是友情：只要認準了，就會全身心投入`,
     health: ``,
   },
